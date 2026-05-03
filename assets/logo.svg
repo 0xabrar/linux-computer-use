@@ -50,8 +50,8 @@
   <!-- title -->
   <text x="256" y="430" text-anchor="middle"
         font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
-        font-size="38" font-weight="800" fill="#e2e8f0" letter-spacing="-0.5">pi-computer-use</text>
+        font-size="38" font-weight="800" fill="#e2e8f0" letter-spacing="-0.5">linux-computer-use</text>
   <text x="256" y="464" text-anchor="middle"
         font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
-        font-size="22" font-weight="700" fill="url(#accent)" letter-spacing="6">LINUX · X11 · AT-SPI</text>
+        font-size="22" font-weight="700" fill="url(#accent)" letter-spacing="6">X11 · AT-SPI</text>
 </svg>
