@@ -1,0 +1,45 @@
+{
+  "name": "@tak1tak/pi-computer-use-linux",
+  "version": "0.1.0",
+  "description": "Token-efficient Linux/X11 computer-use tools for Pi (mariozechner/pi-coding-agent).",
+  "type": "module",
+  "keywords": ["pi-package", "pi-extension", "pi", "computer-use", "linux", "x11", "at-spi"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tak-uukti/pi-computer-use-linux.git"
+  },
+  "bugs": { "url": "https://github.com/tak-uukti/pi-computer-use-linux/issues" },
+  "homepage": "https://github.com/tak-uukti/pi-computer-use-linux#readme",
+  "engines": { "node": ">=20.6.0" },
+  "files": [
+    "extensions",
+    "skills",
+    "src",
+    "scripts/setup-helper.mjs",
+    "bridge/bridge.py",
+    "bridge/requirements.txt",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": ["./extensions"],
+    "skills": ["./skills"]
+  },
+  "scripts": {
+    "postinstall": "node scripts/setup-helper.mjs --postinstall",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@sinclair/typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "@mariozechner/pi-coding-agent": { "optional": true },
+    "@sinclair/typebox": { "optional": true }
+  },
+  "devDependencies": {
+    "typescript": "^5.4",
+    "@types/node": "^20.11.0"
+  }
+}
