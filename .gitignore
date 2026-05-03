@@ -1,7 +1,8 @@
-node_modules
-dist
+node_modules/
+dist/
 *.log
 .DS_Store
-__pycache__
+__pycache__/
 *.pyc
-/tmp
+/tmp/
+.npmrc

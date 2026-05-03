@@ -1,10 +1,11 @@
 {
   "name": "@tak1tak/pi-computer-use-linux",
-  "version": "0.1.0",
-  "description": "Token-efficient Linux/X11 computer-use tools for Pi (mariozechner/pi-coding-agent).",
+  "version": "0.1.1",
+  "description": "Token-efficient Linux/X11 computer-use tools for Pi (mariozechner/pi-coding-agent). AT-SPI + xdotool, ~1k LOC.",
   "type": "module",
-  "keywords": ["pi-package", "pi-extension", "pi", "computer-use", "linux", "x11", "at-spi"],
+  "keywords": ["pi-package", "pi-extension", "pi", "computer-use", "linux", "x11", "at-spi", "xdotool", "automation", "agent"],
   "license": "MIT",
+  "author": "Tak1tak <https://bytak.in>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tak-uukti/pi-computer-use-linux.git"
@@ -19,12 +20,16 @@
     "scripts/setup-helper.mjs",
     "bridge/bridge.py",
     "bridge/requirements.txt",
+    "assets/logo.png",
+    "assets/logo.svg",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "pi": {
     "extensions": ["./extensions"],
-    "skills": ["./skills"]
+    "skills": ["./skills"],
+    "image": "./assets/logo.png"
   },
   "scripts": {
     "postinstall": "node scripts/setup-helper.mjs --postinstall",
