@@ -27,7 +27,7 @@ The macOS original uses Apple's Accessibility API + AppleScript + ScreenCaptureK
 | | upstream macOS | this port |
 |---|---|---|
 | Total LOC | ~6,866 | **~1,200** (-83%) |
-| Tools registered | ~15 | **8** |
+| Tools registered | ~15 | **10 MCP / 8 Pi** |
 | Native helper | 2,065 lines Swift | **471 lines Python** |
 | Runtime deps | Swift toolchain, codesign | `python3-gi`, `xdotool`, `wmctrl`, `scrot` |
 | Frontends | macOS only | Pi · Claude Code · OpenCode · any MCP client |
@@ -81,7 +81,38 @@ Or, equivalently, drop this into your Claude Code MCP config file (`~/.claude.js
 }
 ```
 
-Restart Claude Code; the 8 tools (`list_windows`, `screenshot`, `click`, `type_text`, `set_text`, `keypress`, `scroll`, `computer_actions`) appear under the `linux-computer-use` namespace.
+Restart Claude Code; the tools (`list_windows`, `screenshot`, `click`, `type_text`, `set_text`, `keypress`, `scroll`, `computer_actions`, `start_recording`, `stop_recording`) appear under the `linux-computer-use` namespace.
+
+### Optional per-call display targeting
+
+Every MCP tool accepts an optional `display` argument. Leave it empty to use the
+MCP server's default `DISPLAY`, or pass another X display such as `":99"` for a
+background desktop:
+
+```json
+{ "display": ":99" }
+```
+
+This lets one MCP server control either your foreground desktop or a background
+X display without registering multiple MCP servers.
+
+Example background desktop:
+
+```bash
+mkdir -p ~/.local/share/linux-computer-use/chrome-bg
+Xvfb :99 -screen 0 1440x900x24 -ac &
+DISPLAY=:99 openbox &
+DISPLAY=:99 google-chrome \
+  --user-data-dir="$HOME/.local/share/linux-computer-use/chrome-bg" \
+  --force-renderer-accessibility \
+  --no-first-run \
+  --no-default-browser-check \
+  about:blank &
+```
+
+Use `start_recording(display:":99")` before a task and
+`stop_recording(display:":99")` afterward to save an MP4 replay under
+`~/.local/share/linux-computer-use/recordings/`.
 
 ### Option 3 — OpenCode (MCP)
 
@@ -109,7 +140,7 @@ Restart OpenCode and the tools become available to the agent.
 
 ## Tools
 
-8 total. Schemas are deliberately terse — see [`extensions/computer-use.ts`](./extensions/computer-use.ts) (Pi) or [`mcp_server/server.py`](./mcp_server/server.py) (MCP).
+8 Pi tools, 10 MCP tools. Schemas are deliberately terse — see [`extensions/computer-use.ts`](./extensions/computer-use.ts) (Pi) or [`mcp_server/server.py`](./mcp_server/server.py) (MCP).
 
 | name | purpose |
 |---|---|
@@ -120,7 +151,9 @@ Restart OpenCode and the tools become available to the agent.
 | `set_text` | replace value of an `@eN` text/entry via AT-SPI EditableText (falls back to focus + Ctrl+A + type) |
 | `keypress` | press keys/chords — `["Return"]`, `["Ctrl","A"]`, `["ctrl+l","Return"]`, etc. |
 | `scroll` | scroll at ref/coords by pixel delta |
-| `computer_actions` | batch up to 20 actions in a single call |
+| `computer_actions` | batch multiple actions in a single call |
+| `start_recording` | record an X display to an MP4 via `ffmpeg` / `x11grab` |
+| `stop_recording` | stop recording and return the MP4 path |
 
 ## Architecture
 
@@ -133,7 +166,7 @@ Restart OpenCode and the tools become available to the agent.
        ▼             ▼                  ▼
 ┌──────────────┐  ┌────────────────────────────┐
 │ extensions/  │  │ mcp_server/server.py       │
-│ computer-    │  │ FastMCP wrapper (8 tools)  │
+│ computer-    │  │ FastMCP wrapper (10 tools) │
 │ use.ts       │  └─────────────┬──────────────┘
 └──────┬───────┘                │
        │                        │
@@ -235,7 +268,7 @@ The Pi extension API surface is stubbed locally in [`src/types.ts`](./src/types.
 │   └── computer-use.ts              Pi tool registration + JSON schemas
 ├── mcp_server/
 │   ├── __init__.py
-│   └── server.py                    FastMCP wrapper around the bridge (8 tools)
+│   └── server.py                    FastMCP wrapper around the bridge (10 tools)
 ├── scripts/
 │   └── setup-helper.mjs             Pi postinstall — writes ~/.pi/.../bridge wrapper
 ├── skills/computer-use/SKILL.md     pi skill — Quick Start + Pitfalls
